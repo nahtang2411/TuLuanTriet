@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tự Luận Triết Học Mác - Lênin (20 Câu)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #2980b9;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #c0392b;
+            --light-bg: #ecf0f1;
+            --white: #ffffff;
+            --border: #bdc3c7;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e8eaed; margin: 0; padding: 20px; color: #333; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; background: var(--white); padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        h1 { text-align: center; color: var(--primary); font-size: 1.8rem; border-bottom: 3px solid var(--secondary); padding-bottom: 15px; margin-top: 0; }
+        
+        /* Navigation Grid */
+        .nav-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; padding: 15px; background: var(--light-bg); border-radius: 8px; justify-content: center; }
+        .grid-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); background: var(--white); cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; display: flex; justify-content: center; align-items: center; padding: 0;}
+        .grid-btn.current { border-color: var(--secondary); background: var(--secondary); color: var(--white); transform: scale(1.1); box-shadow: 0 0 8px rgba(41, 128, 185, 0.5); }
+        .grid-btn.completed { border-color: var(--success); background: #d5f5e3; color: #145a32; }
+        
+        /* Question Area */
+        .question-header { font-size: 1.1rem; color: var(--secondary); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; padding: 15px; background: #fdfefe; border-left: 5px solid var(--secondary); border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .textarea-container textarea { width: 100%; height: 220px; padding: 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; resize: vertical; margin-bottom: 15px; transition: 0.3s; }
+        .textarea-container textarea:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 5px rgba(41, 128, 185, 0.3); }
+        
+        /* Buttons */
+        .btn { padding: 12px 25px; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-submit { background: var(--secondary); color: white; width: 100%; }
+        .btn-submit:hover { background: #2471a3; }
+        .btn-nav { background: #95a5a6; color: white; flex: 1; }
+        .btn-nav:hover { background: #7f8c8d; }
+        .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-finish { background: var(--danger); color: white; width: 100%; margin-top: 20px; }
+        .btn-finish:hover { background: #a93226; }
+        
+        .controls { display: flex; gap: 15px; margin-top: 20px; }
+
+        /* Answer & Rubric Area */
+        .rubric-container { display: none; margin-top: 25px; padding: 20px; background: #fcf3cf; border: 2px solid #f1c40f; border-radius: 8px; animation: fadeIn 0.5s; }
+        .rubric-container h3 { margin-top: 0; color: #d35400; font-size: 1.2rem; border-bottom: 1px solid #f1c40f; padding-bottom: 10px; }
+        .rubric-container ul { padding-left: 20px; margin-bottom: 20px; }
+        .rubric-container li { margin-bottom: 10px; }
+        
+        /* Self Grading */
+        .grading-box { background: var(--white); padding: 15px; border-radius: 8px; text-align: center; border: 1px solid var(--border); }
+        .grading-box p { font-weight: bold; margin-top: 0; color: var(--primary); }
+        .score-slider-container { display: flex; align-items: center; gap: 15px; justify-content: center; }
+        .score-slider { width: 60%; cursor: pointer; }
+        .score-display { font-size: 1.5rem; font-weight: bold; color: var(--danger); width: 50px; }
+        .btn-save-score { background: var(--success); color: white; margin-top: 15px; }
+        .btn-save-score:hover { background: #1e8449; }
+
+        /* Results Screen */
+        #result-screen { display: none; }
+        .summary-card { background: var(--light-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--primary); }
+        .summary-score { font-size: 2.5rem; font-weight: bold; color: var(--danger); text-align: center; margin: 10px 0; }
+        
+        .review-item { background: var(--white); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .review-item h4 { margin-top: 0; color: var(--secondary); }
+        .review-user-ans { background: #f8f9fa; padding: 15px; border-radius: 6px; font-style: italic; color: #555; white-space: pre-wrap; margin-bottom: 15px; border-left: 3px solid var(--gray);}
+        .review-score { font-weight: bold; color: var(--danger); font-size: 1.2rem; text-align: right; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @media (max-width: 600px) {
+            .controls { flex-direction: column; }
+            .btn { width: 100%; }
+            .score-slider-container { flex-direction: column; }
+            .score-slider { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+  <a href="MTPTBV.html" style="position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:9999;padding:12px 20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-decoration:none;font:600 15px system-ui,sans-serif;border-radius:999px;box-shadow:0 4px 14px rgba(99,102,241,.5);">Sang bài MTPTBV →</a>
+
+
+<div class="container">
+    <h1>Tự Luận Triết Học Mác - Lênin (20 Câu)</h1>
+    
+    <div id="quiz-screen">
+        <div class="nav-grid" id="nav-grid"></div>
+
+        <div id="question-area">
+            <div class="question-header" id="q-header">Câu 1/20</div>
+            <div class="question-text" id="q-text">Đang tải câu hỏi...</div>
+            
+            <div class="textarea-container">
+                <textarea id="user-input" placeholder="Nhập bài phân tích/lập luận của bạn vào đây..."></textarea>
+            </div>
+            
+            <button class="btn btn-submit" id="btn-submit-ans" onclick="submitAnswer()">Nộp câu trả lời & Xem Bareme</button>
+            
+            <div class="rubric-container" id="rubric-area">
+                <h3>Đáp án chi tiết (Bareme)</h3>
+                <div id="rubric-content"></div>
+                
+                <div class="grading-box">
+                    <p>Tự chấm điểm bài làm của bạn (Thang điểm 10)</p>
+                    <div class="score-slider-container">
+                        <input type="range" min="0" max="10" step="0.5" value="5" class="score-slider" id="score-slider" oninput="updateScoreDisplay()">
+                        <div class="score-display"><span id="score-val">5.0</span>/10</div>
+                    </div>
+                    <button class="btn btn-save-score" onclick="saveScore()">Lưu điểm & Sang câu tiếp theo</button>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-nav" id="btn-prev" onclick="changeQuestion(-1)">Trở lại</button>
+                <button class="btn btn-nav" id="btn-next" onclick="changeQuestion(1)">Tiếp theo</button>
+            </div>
+            
+            <button class="btn btn-finish" onclick="finishTest()">Kết thúc & Tổng kết điểm</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h2 style="text-align: center; color: var(--primary);">Báo Cáo Kết Quả Tự Luận</h2>
+        <div class="summary-card">
+            <h3 style="text-align: center; margin-top: 0;">Tổng điểm tự đánh giá</h3>
+            <div class="summary-score" id="final-score">0 / 200</div>
+            <p style="text-align: center; font-weight: bold;" id="final-eval"></p>
+        </div>
+        
+        <h3>Chi tiết bài làm:</h3>
+        <div id="review-list"></div>
+        
+        <button class="btn btn-submit" onclick="location.reload()" style="margin-top: 30px;">Làm lại bài kiểm tra</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            "q": "Phân tích câu tục ngữ: 'Góp gió thành bão', 'Nước chảy đá mòn'. Câu tục ngữ này phản ánh quy luật nào của Triết học Mác - Lênin?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm quy luật Lượng - Chất:</strong> Chất là phạm trù triết học chỉ tính quy định khách quan vốn có của sự vật, là sự thống nhất hữu cơ các thuộc tính làm cho nó là nó chứ không phải là cái khác. Lượng là tính quy định khách quan vốn có của sự vật về mặt số lượng, quy mô, trình độ, nhịp độ.</li>
+                <li><strong>Khẳng định điều gì:</strong> Quy luật khẳng định mọi sự thay đổi về chất đều bắt nguồn từ sự thay đổi về lượng. Khi lượng thay đổi (tích lũy) đạt đến một giới hạn nhất định (điểm nút) sẽ dẫn đến bước nhảy, làm thay đổi chất của sự vật. Ngược lại, chất mới ra đời sẽ tác động trở lại làm thay đổi lượng.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> "Góp gió", "nước chảy" đại diện cho sự tích lũy dần dần, liên tục về mặt lượng. "Bão" và "đá mòn" là kết quả của bước nhảy (sự thay đổi về chất). Tương tự như nước đun sôi: từ 1 độ đến 99 độ nước vẫn ở thể lỏng (lượng đổi chất chưa đổi), nhưng đạt 100 độ (điểm nút) nước sẽ sôi và hóa hơi (bước nhảy, chất đổi).</li>
+                <li><strong>Ý nghĩa thực tiễn:</strong> Muốn có sự biến đổi về chất (thành công), phải kiên trì tích lũy về lượng (nỗ lực học tập, làm việc hàng ngày). Tránh nôn nóng đốt cháy giai đoạn hoặc bảo thủ trì trệ.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Hãy phân tích câu tục ngữ 'Tốt gỗ hơn tốt nước sơn'. Từ đó làm rõ mối quan hệ biện chứng giữa cặp phạm trù Nội dung và Hình thức.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Nội dung và Hình thức:</strong> Nội dung là tổng hợp tất cả những mặt, những yếu tố, những quá trình tạo nên sự vật. Hình thức là phương thức tồn tại và phát triển của sự vật, là hệ thống các mối liên hệ tương đối bền vững giữa các yếu tố của sự vật.</li>
+                <li><strong>Khẳng định điều gì:</strong> Nội dung và hình thức gắn bó chặt chẽ, thống nhất với nhau, trong đó nội dung giữ vai trò quyết định đối với hình thức. Tuy nhiên, hình thức có tính độc lập tương đối và tác động trở lại nội dung (thúc đẩy hoặc kìm hãm).</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> "Gỗ" đại diện cho nội dung, "nước sơn" đại diện cho hình thức. Một quyển sách có bìa thiết kế rất đẹp (hình thức tốt) nhưng nội dung sai lệch (nội dung kém) thì quyển sách đó vô giá trị. Ngược lại, quyển sách bìa giản dị nhưng chứa đựng kiến thức sâu sắc thì giá trị rất cao. Câu tục ngữ nhắc nhở ta phải đặt nội dung lên hàng đầu.</li>
+                <li><strong>Ý nghĩa thực tiễn:</strong> Trong nhận thức và hành động, phải căn cứ trước hết vào nội dung để đánh giá sự vật, con người. Tuy nhiên, không được xem nhẹ hình thức; cần xây dựng hình thức phù hợp để phát huy tối đa giá trị của nội dung.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Nhà triết học Hêraclít nói: 'Không ai tắm hai lần trên cùng một dòng sông'. Nhận định này thể hiện nguyên lý triết học nào? Hãy phân tích.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Nguyên lý về sự phát triển:</strong> Phát triển là một phạm trù triết học chỉ quá trình vận động theo khuynh hướng đi lên, từ thấp đến cao, từ đơn giản đến phức tạp, từ kém hoàn thiện đến hoàn thiện hơn của sự vật.</li>
+                <li><strong>Khẳng định điều gì:</strong> Nguyên lý này khẳng định mọi sự vật, hiện tượng trong vũ trụ không đứng im tĩnh tại mà luôn luôn nằm trong trạng thái vận động, biến đổi không ngừng do mâu thuẫn bên trong quy định.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Dòng sông luôn chảy, nước luôn trôi đi. Người tắm lần thứ hai thì dòng nước đã khác trước, bản thân người tắm cũng thay đổi từng phút giây (tế bào già chết đi, tế bào mới sinh ra). Nếu nhìn bằng siêu hình, ta thấy hòn đá nằm im, nhưng theo biện chứng, các nguyên tử bên trong hòn đá đang dao động liên tục và nó đang bị phong hóa, bào mòn mỗi ngày.</li>
+                <li><strong>Ý nghĩa:</strong> Đòi hỏi con người phải có quan điểm phát triển. Khi xem xét sự vật, phải đặt nó trong sự vận động, phát triển, nhận ra cái mới, cái tiến bộ để ủng hộ, tránh thái độ bảo thủ, định kiến.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Phân tích câu ca dao: 'Tre già măng mọc'. Dưới góc độ Triết học, nó phản ánh quy luật gì về sự phát triển?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm quy luật Phủ định của phủ định:</strong> Phủ định biện chứng là sự tự phủ định, tự phát triển của sự vật, hiện tượng; là mắt khâu trong quá trình dẫn tới sự ra đời của cái mới, cái tiến bộ trên cơ sở kế thừa có chọn lọc cái cũ.</li>
+                <li><strong>Khẳng định điều gì:</strong> Quy luật này khẳng định khuynh hướng tất yếu của sự phát triển là diễn ra theo đường xoáy ốc. Sự vật trải qua quá trình tự phủ định nhiều lần, dường như quay lại điểm xuất phát nhưng trên một trình độ mới cao hơn.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> "Tre già" (cái cũ) theo thời gian sẽ tàn lụi, tạo điều kiện cho "măng" (cái mới) mọc lên thay thế. Đây là sự phát triển tất yếu khách quan. So với hạt lúa bị đem xay thành gạo nấu ăn (phủ định siêu hình - chấm dứt sự phát triển), thì hạt lúa được gieo xuống đất mọc thành cây mạ chính là phủ định biện chứng (sự phát triển có tính kế thừa). Cây măng mọc từ rễ tre cũng kế thừa dưỡng chất của tre mẹ.</li>
+                <li><strong>Ý nghĩa:</strong> Cần có thái độ khách quan, khoa học: ủng hộ cái mới, cái tiến bộ; đồng thời trân trọng, kế thừa có chọn lọc những giá trị tốt đẹp của cái cũ, tránh thái độ "phủ định sạch trơn".</li>
+            </ul>
+        `}, 
+        {
+            "q": "Ông cha ta thường nói: 'Cha mẹ sinh con, trời sinh tính'. Dưới góc độ Triết học Mác - Lênin, hãy nhận xét, phê phán quan điểm trên và nêu bản chất thực sự của con người.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Bản chất con người:</strong> Theo C.Mác: "Trong tính hiện thực của nó, bản chất con người là tổng hòa những quan hệ xã hội". Con người vừa là một thực thể sinh học (tự nhiên), vừa là một thực thể xã hội, trong đó mặt xã hội đóng vai trò quyết định bản chất.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định tính cách, phẩm chất, nhân cách của con người không phải là cái gì đó bẩm sinh, cố định, hay do một lực lượng siêu nhiên nào sắp đặt, mà được hình thành, rèn luyện và biến đổi thông qua hoàn cảnh sống, giáo dục và hoạt động thực tiễn trong xã hội.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Câu nói "trời sinh tính" mang nặng Chủ nghĩa duy tâm, cho rằng tính cách là do "trời" định đoạt, dẫn đến thái độ cam chịu. Thực tế, yếu tố sinh học ("cha mẹ sinh con") chỉ quyết định ngoại hình. Nếu so sánh một đứa trẻ bị bỏ rơi sống với bầy sói, nó sẽ mang tập tính của sói (không có bản chất người). Chỉ khi sống trong xã hội, qua lao động và giao tiếp, nó mới có tính cách con người.</li>
+                <li><strong>Ý nghĩa:</strong> Phủ nhận thuyết định mệnh. Đề cao vai trò của giáo dục, tu dưỡng cá nhân và cải tạo môi trường xã hội để xây dựng nhân cách con người tốt đẹp.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Phân tích luận điểm của V.I.Lênin: 'Thực tiễn không có lý luận hướng dẫn thì thành thực tiễn mù quáng. Lý luận mà không liên hệ với thực tiễn là lý luận suông'.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Thực tiễn và Lý luận:</strong> Thực tiễn là toàn bộ những hoạt động vật chất có mục đích, mang tính lịch sử - xã hội của con người nhằm cải biến tự nhiên và xã hội. Lý luận là hệ thống những tri thức được khái quát từ thực tiễn, phản ánh bản chất và quy luật của sự vật.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định sự thống nhất biện chứng giữa lý luận và thực tiễn. Thực tiễn đóng vai trò là cơ sở, động lực, mục đích và tiêu chuẩn kiểm tra lý luận. Ngược lại, lý luận có vai trò soi đường, định hướng, dự báo cho thực tiễn phát triển.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Một người nông dân chỉ biết cấy lúa theo kinh nghiệm truyền miệng, khi gặp sâu bệnh lạ sẽ lúng túng mất mùa (thực tiễn mù quáng vì thiếu lý luận khoa học). Ngược lại, một kỹ sư nông nghiệp chỉ ngồi phòng lạnh đọc sách về lúa mà chưa từng ra đồng ruộng thực tế thì những phương pháp đề ra rất dễ thất bại (lý luận suông). Phải kết hợp cả hai mới mang lại hiệu quả cao.</li>
+                <li><strong>Ý nghĩa:</strong> Phải luôn quán triệt nguyên tắc "thống nhất giữa lý luận và thực tiễn". Khắc phục cả bệnh kinh nghiệm chủ nghĩa (chỉ trọng thực tiễn, coi thường lý luận) và bệnh giáo điều (chỉ ôm lý thuyết, xa rời thực tiễn).</li>
+            </ul>
+        `}, 
+        {
+            "q": "Từ câu tục ngữ 'Gần mực thì đen, gần đèn thì rạng', hãy phân tích Nguyên lý về mối liên hệ phổ biến. Quan điểm này có tuyệt đối đúng không?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Nguyên lý về mối liên hệ phổ biến:</strong> Liên hệ là sự quy định, tác động qua lại, chuyển hóa lẫn nhau giữa các sự vật, hiện tượng hoặc giữa các mặt, các yếu tố của mỗi sự vật.</li>
+                <li><strong>Khẳng định điều gì:</strong> Nguyên lý khẳng định mọi sự vật, hiện tượng trên thế giới đều không tồn tại cô lập mà luôn nằm trong mạng lưới các mối liên hệ chằng chịt, tác động qua lại. Các mối liên hệ mang tính khách quan, phổ biến và đa dạng.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> "Gần mực thì đen, gần đèn thì rạng" cho thấy con người chịu ảnh hưởng sâu sắc từ môi trường xã hội xung quanh (bạn bè tốt/xấu). Môi trường xấu dễ làm ta hư hỏng, môi trường tốt giúp ta tiến bộ. Tuy nhiên, quan điểm này không tuyệt đối. Ví dụ: Hoa sen "gần bùn mà chẳng hôi tanh mùi bùn". Nếu con người có ý thức độc lập và bản lĩnh vững vàng, họ hoàn toàn có thể "gần mực mà không đen", thậm chí cải tạo được môi trường.</li>
+                <li><strong>Ý nghĩa:</strong> Đòi hỏi quan điểm toàn diện trong nhận thức. Cần chú trọng xây dựng môi trường sống tốt; đồng thời tự rèn luyện bản lĩnh cá nhân để chống lại những tác động tiêu cực từ bên ngoài.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Vì sao Triết học Mác - Lênin khẳng định: 'Vận động là tuyệt đối, đứng im là tương đối, tạm thời'?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Vận động và Đứng im:</strong> Vận động là mọi sự biến đổi nói chung, là phương thức tồn tại của vật chất. Đứng im là trạng thái ổn định về chất của sự vật, khi sự vật chưa biến đổi thành sự vật khác.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định không có vật chất nào tồn tại mà không vận động. Vận động là thuộc tính vĩnh viễn và tuyệt đối. Đứng im thực chất chỉ là một trạng thái đặc biệt của vận động (vận động trong thăng bằng), mang tính tương đối và tạm thời.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Vận động do mâu thuẫn bên trong sự vật quy định nên nó liên tục diễn ra. Đứng im là tương đối vì nó chỉ xét trong một mối quan hệ nhất định (Ví dụ: Hành khách ngồi yên trên tàu thì được coi là đứng im so với con tàu, nhưng lại đang vận động cơ học rất nhanh so với mặt đường, và vận động sinh học bên trong cơ thể vẫn tiếp diễn). Đứng im là tạm thời vì sớm muộn gì sự vật cũng sẽ bị phá vỡ chất cũ.</li>
+                <li><strong>Ý nghĩa:</strong> Bác bỏ quan điểm siêu hình coi sự vật là tĩnh tại, bất biến. Yêu cầu xem xét sự vật trong sự vận động, biến đổi không ngừng để nhận thức đúng bản chất của chúng.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Phân biệt phương pháp tư duy Biện chứng và Siêu hình thông qua ví dụ: Cách nhìn nhận, đánh giá về một người từng mắc sai lầm trong quá khứ.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm phương pháp Biện chứng và Siêu hình:</strong> Phương pháp siêu hình nhận thức đối tượng trong trạng thái tĩnh tại, cô lập, tách rời. Phương pháp biện chứng nhận thức đối tượng trong các mối liên hệ phổ biến, vận động và phát triển.</li>
+                <li><strong>Khẳng định điều gì:</strong> Phương pháp biện chứng phản ánh đúng đắn, khách quan bản chất của thế giới; trong khi phương pháp siêu hình chỉ thấy bộ phận mà không thấy toàn thể, thấy tĩnh mà không thấy động, dẫn đến phiến diện.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Nhìn nhận một người từng đi tù: Người có tư duy siêu hình sẽ cho rằng "Bản tính khó dời", người đó vĩnh viễn là kẻ xấu, nên xa lánh và cô lập họ (nhìn nhận tĩnh tại). Ngược lại, người có tư duy biện chứng sẽ hiểu rằng con người luôn vận động, thay đổi; họ sẽ xem xét thái độ cải tạo hiện tại của người đó, cho họ cơ hội làm lại cuộc đời vì tin vào sự phát triển tích cực (nhìn nhận động và phát triển).</li>
+                <li><strong>Ý nghĩa:</strong> Phương pháp biện chứng cung cấp công cụ nhận thức khoa học và nhân văn hơn. Cần khắc phục tư duy siêu hình, định kiến, máy móc trong giáo dục, đánh giá nhân sự.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Câu ca dao: 'Một cây làm chẳng nên non / Ba cây chụm lại nên hòn núi cao' có thể dùng để minh họa cho những quy luật/nguyên lý triết học nào? Trình bày cụ thể.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Lượng - Chất và Nguyên lý Liên hệ phổ biến:</strong> Lượng là quy mô, số lượng; Chất là tính quy định khách quan vốn có. Liên hệ là sự quy định, tác động lẫn nhau giữa các yếu tố.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định sức mạnh của sự tích lũy về lượng tạo ra sự thay đổi về chất; đồng thời khẳng định sức mạnh của sự liên kết, tác động qua lại giữa các yếu tố để tạo thành một hệ thống sức mạnh mới.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Về Lượng - Chất: "Một cây" là lượng quá nhỏ, chưa đủ để làm thay đổi trạng thái ("chẳng nên non"). Sự gia tăng về lượng ("Ba cây") khi tích lũy đủ điểm nút sẽ tạo ra một chất mới lớn lao hơn ("hòn núi cao"). Về Liên hệ phổ biến: Nếu 3 cái cây bị chia tách cô lập ở 3 nơi (siêu hình) thì dễ gãy đổ. Nhưng khi "chụm lại" (biện chứng), chúng tạo ra một sức mạnh cộng hưởng lớn hơn nhiều so với phép cộng toán học thông thường.</li>
+                <li><strong>Ý nghĩa:</strong> Đề cao tinh thần đoàn kết, hợp tác, sức mạnh tập thể. Khẳng định cá nhân phải gắn bó với tập thể, liên kết với nhau mới có thể tạo ra những thành quả to lớn.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Trình bày khái niệm và mối quan hệ biện chứng giữa Lực lượng sản xuất (LLSX) và Quan hệ sản xuất (QHSX). Tại sao nói LLSX là yếu tố động nhất, cách mạng nhất?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm:</strong> LLSX là sự kết hợp giữa người lao động và tư liệu sản xuất, thể hiện mối quan hệ giữa con người với tự nhiên trong sản xuất. QHSX là mối quan hệ giữa người với người trong quá trình sản xuất (sở hữu, tổ chức, phân phối).</li>
+                <li><strong>Khẳng định điều gì:</strong> Đây là quy luật cơ bản nhất của lịch sử. LLSX quyết định QHSX (LLSX thế nào thì QHSX như thế đó). Khi LLSX phát triển, QHSX cũ kìm hãm sẽ bị thay thế bằng QHSX mới. QHSX có tính độc lập tương đối, tác động trở lại LLSX.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> LLSX là yếu tố động nhất vì con người luôn tìm cách cải tiến công cụ lao động và áp dụng khoa học công nghệ để bớt nặng nhọc, tăng năng suất. Trái lại, QHSX (nhất là quan hệ sở hữu) lại được giai cấp thống trị duy trì bằng pháp luật nên mang tính bảo thủ. Ví dụ: Sự ra đời của công cụ bằng sắt (cải tiến LLSX) đã làm tăng năng suất, tạo ra sản phẩm thặng dư, dẫn đến chế độ công hữu nguyên thủy (QHSX cũ) bị phá vỡ, thay thế bằng chế độ tư hữu nô lệ (QHSX mới).</li>
+                <li><strong>Ý nghĩa:</strong> Muốn phát triển kinh tế, trước hết phải chú trọng phát triển LLSX (đầu tư khoa học công nghệ, giáo dục); đồng thời liên tục đổi mới, hoàn thiện QHSX cho phù hợp, tránh để QHSX đi quá xa hoặc quá tụt hậu.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Vận dụng quy luật quan hệ biện chứng giữa Lực lượng sản xuất (LLSX) và Quan hệ sản xuất (QHSX) vào công cuộc Đổi mới ở Việt Nam (từ năm 1986).", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm và Khẳng định quy luật:</strong> Quy luật khẳng định sự phù hợp khách quan của QHSX với trình độ LLSX. QHSX phù hợp sẽ mở đường cho LLSX phát triển; không phù hợp sẽ kìm hãm LLSX.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> 
+                    <br>- Trước Đổi mới (1986): Ta áp đặt QHSX quá cao (chỉ có sở hữu nhà nước và tập thể, kinh tế kế hoạch hóa, cào bằng) trong khi trình độ LLSX lại quá thấp kém (thủ công). Điều này giống như mặc một chiếc áo quá rộng, làm kìm hãm hoàn toàn sức sản xuất, gây khủng hoảng kinh tế nghiêm trọng.
+                    <br>- Từ Đổi mới đến nay: Ta điều chỉnh QHSX để phù hợp với LLSX. Chấp nhận đa sở hữu (nền kinh tế nhiều thành phần), chuyển sang kinh tế thị trường, phân phối theo năng lực. Kết quả là giải phóng được mọi nguồn lực, thúc đẩy kinh tế phát triển thần tốc.</li>
+                <li><strong>Ý nghĩa:</strong> Bài học lớn nhất là không được chủ quan duy ý chí, nôn nóng \"đốt cháy giai đoạn\". Phải luôn tôn trọng quy luật khách quan, liên tục đánh giá đúng trình độ LLSX để có những bước đi và cải cách kinh tế phù hợp.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Phân tích mối quan hệ biện chứng giữa Cơ sở hạ tầng (CSHT) và Kiến trúc thượng tầng (KTTT). Cho ví dụ thực tiễn.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm:</strong> CSHT là toàn bộ những QHSX hợp thành cơ cấu kinh tế của một xã hội (Kinh tế). KTTT là toàn bộ những quan điểm, tư tưởng (chính trị, pháp quyền, triết học, tôn giáo...) cùng những thiết chế xã hội tương ứng (Nhà nước, đảng phái...) hình thành trên CSHT đó (Chính trị - Xã hội).</li>
+                <li><strong>Khẳng định điều gì:</strong> Quy luật khẳng định CSHT quyết định KTTT (kinh tế quyết định chính trị). CSHT nào sinh ra KTTT ấy. Khi CSHT biến đổi thì KTTT tất yếu biến đổi theo. Tuy nhiên, KTTT có tính độc lập tương đối và tác động mạnh mẽ trở lại CSHT (bảo vệ hoặc kìm hãm), trong đó Nhà nước là công cụ có tác động mạnh nhất.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> CSHT quyết định KTTT: Trong xã hội phong kiến, kinh tế dựa trên chế độ sở hữu ruộng đất của địa chủ (CSHT), nên sinh ra bộ máy nhà nước phong kiến quân chủ chuyên chế và hệ tư tưởng Nho giáo trung quân ái quốc (KTTT) để bảo vệ chế độ đó. KTTT tác động trở lại: Khi Việt Nam đổi mới, chuyển sang CSHT kinh tế thị trường, Nhà nước (KTTT) buộc phải ban hành hàng loạt bộ luật mới (Luật Doanh nghiệp, Luật Đầu tư) để bảo vệ và thúc đẩy kinh tế thị trường đó phát triển. Nếu luật pháp (KTTT) sai lầm, nó sẽ bóp nghẹt nền kinh tế (CSHT).</li>
+                <li><strong>Ý nghĩa:</strong> Trong đổi mới đất nước, phải lấy đổi mới kinh tế (CSHT) làm trọng tâm, đồng thời từng bước đổi mới chính trị, cải cách hành chính, xây dựng Nhà nước pháp quyền (KTTT) vững mạnh để bảo vệ thành quả kinh tế.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Sự tồn tại xã hội và Ý thức xã hội là gì? Tại sao nói Ý thức xã hội thường lạc hậu hơn so với Tồn tại xã hội?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm:</strong> Tồn tại xã hội (TTXH) là toàn bộ sinh hoạt vật chất và điều kiện vật chất của xã hội (phương thức sản xuất, tự nhiên, dân số). Ý thức xã hội (YTXH) là toàn bộ đời sống tinh thần của xã hội (quan điểm, truyền thống, phong tục, nghệ thuật...) phản ánh tồn tại xã hội.</li>
+                <li><strong>Khẳng định điều gì:</strong> Nguyên lý khẳng định TTXH quyết định YTXH; TTXH thế nào thì YTXH thế ấy. Tuy nhiên, YTXH có tính độc lập tương đối, biểu hiện rõ nhất ở đặc điểm: YTXH thường xuyên lạc hậu hơn so với TTXH đã sinh ra nó.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> YTXH lạc hậu vì nó là cái phản ánh, nên chỉ biến đổi sau khi TTXH đã thay đổi. Hơn nữa, thói quen và phong tục có sức ì tâm lý rất lớn. Ví dụ: Nền kinh tế tiểu nông (TTXH cũ) đã sinh ra tâm lý tùy tiện, giờ giấc dây dưa, tư tưởng \"trọng nam khinh nữ\" (YTXH). Hiện nay, khi ta đã có đô thị hóa và làm việc trong các khu công nghiệp hiện đại (TTXH mới rất tiên tiến), nhưng thói quen đi trễ, hay tư tưởng phải sinh bằng được con trai vẫn còn tồn tại dai dẳng trong xã hội (YTXH lạc hậu).</li>
+                <li><strong>Ý nghĩa:</strong> Cần kiên trì kết hợp giáo dục tư tưởng với việc xây dựng, phát triển vững chắc nền tảng kinh tế vật chất; không thể chủ quan xóa bỏ ngay lập tức những tàn dư tư tưởng cũ nếu điều kiện kinh tế sinh ra nó vẫn còn rơi rớt.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Trình bày sự phát triển của các hình thái kinh tế - xã hội (HTKT-XH) là một quá trình lịch sử - tự nhiên. Từ đó giải thích vì sao Việt Nam có thể 'bỏ qua' chế độ tư bản chủ nghĩa để tiến lên chủ nghĩa xã hội.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm HTKT-XH:</strong> Là một phạm trù chỉ xã hội ở một giai đoạn lịch sử nhất định, với một kiểu QHSX đặc trưng, dựa trên một trình độ nhất định của LLSX, và một KTTT tương ứng.</li>
+                <li><strong>Khẳng định điều gì:</strong> Sự phát triển của các HTKT-XH là \"quá trình lịch sử - tự nhiên\", tức là sự thay thế HTKT-XH này bằng HTKT-XH khác tuân theo các quy luật khách quan (quy luật LLSX - QHSX, CSHT - KTTT), không phụ thuộc vào ý muốn chủ quan của con người. Mâu thuẫn giữa LLSX tiến bộ và QHSX lỗi thời là động lực bên trong phá vỡ xã hội cũ.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Lịch sử loài người tất yếu trải qua 5 hình thái từ Cộng sản nguyên thủy đến Cộng sản chủ nghĩa. Tuy nhiên, không có nghĩa là mọi quốc gia bắt buộc phải đi từng bước. Giống như đi cầu thang, có người bước từng bậc, nhưng có người chân dài hoặc có công cụ hỗ trợ có thể nhảy cóc 2 bậc. Việt Nam \"bỏ qua\" CNTB tức là bỏ qua việc xác lập vị trí thống trị của quan hệ sản xuất tư bản chủ nghĩa, nhưng không bỏ qua quy luật khách quan, mà ta kế thừa những thành tựu KHKT của CNTB để tiến nhanh lên CNXH.</li>
+                <li><strong>Ý nghĩa:</strong> Khẳng định con đường đi lên CNXH của Việt Nam là có cơ sở khoa học, tuân thủ quy luật khách quan, phù hợp với xu thế phát triển đa dạng của lịch sử thế giới.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Phân tích vai trò của Quần chúng nhân dân và Lãnh tụ trong lịch sử theo quan điểm của Chủ nghĩa Mác - Lênin.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm:</strong> Quần chúng nhân dân (QCND) là bộ phận có cùng chung lợi ích, bao gồm những người lao động sản xuất ra của cải vật chất và tinh thần. Lãnh tụ là những cá nhân kiệt xuất do phong trào quần chúng tạo ra, có năng lực nhận thức quy luật và tổ chức QCND.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định QCND mới là lực lượng sáng tạo chân chính ra lịch sử, là động lực cơ bản của mọi sự phát triển xã hội. Lãnh tụ đóng vai trò cực kỳ quan trọng trong việc định hướng, tổ chức, nhưng không phải là người trực tiếp quyết định lịch sử.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Quan điểm duy tâm anh hùng ca cho rằng vĩ nhân, vua chúa tạo ra lịch sử. Ví dụ: Quan điểm cũ cho rằng một mình Nguyễn Huệ đánh tan vạn quân Thanh. Nhưng Triết học Mác khẳng định, Nguyễn Huệ là lãnh tụ thiên tài đứng ra tập hợp lực lượng, còn những người trực tiếp cầm vũ khí, hy sinh xương máu và cung cấp lương thảo làm nên chiến thắng Ngọc Hồi - Đống Đa vĩ đại chính là hàng vạn QCND. Thiếu QCND, lãnh tụ không thể làm nên lịch sử. QCND là người sáng tạo ra của cải vật chất, tinh thần và là lực lượng nòng cốt của các cuộc cách mạng.</li>
+                <li><strong>Ý nghĩa:</strong> Quán triệt sâu sắc quan điểm \"Lấy dân làm gốc\". Mọi chủ trương, đường lối của Đảng và Nhà nước phải vì lợi ích của nhân dân, dựa vào nhân dân; đồng thời phải có cơ chế bồi dưỡng, phát hiện và trọng dụng những cá nhân xuất sắc làm lãnh tụ phong trào.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Giai cấp là gì? Vì sao Mác khẳng định 'Lịch sử tất cả các xã hội có giai cấp cho đến nay chỉ là lịch sử đấu tranh giai cấp'?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Giai cấp:</strong> Là những tập đoàn người to lớn khác nhau về địa vị trong hệ thống sản xuất xã hội, về quan hệ sở hữu đối với tư liệu sản xuất, về vai trò trong tổ chức lao động, và phân phối của cải. Thực chất, giai cấp này có thể bóc lột lao động của giai cấp khác.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định giai cấp chỉ ra đời và tồn tại trong những điều kiện kinh tế - xã hội nhất định (khi có chế độ tư hữu). Đấu tranh giai cấp là động lực trực tiếp, quan trọng nhất thúc đẩy sự phát triển của các xã hội có giai cấp đối kháng.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Mâu thuẫn giữa LLSX và QHSX biểu hiện về mặt xã hội chính là mâu thuẫn giữa giai cấp bị bóc lột và bóc lột. Lợi ích của họ đối kháng gay gắt, không thể điều hòa. Ví dụ: Cuộc đấu tranh của nông nô chống lại địa chủ phong kiến, cao trào là cuộc cách mạng tư sản đã lật đổ chế độ phong kiến thối nát, mở đường cho CNTB ra đời. Đấu tranh giai cấp chính là phương thức giải quyết mâu thuẫn xã hội, dùng bạo lực cách mạng đập tan QHSX cũ để xác lập hệ thống xã hội mới tiến bộ hơn.</li>
+                <li><strong>Ý nghĩa:</strong> Cung cấp phương pháp luận giai cấp để phân tích các hiện tượng chính trị - xã hội. Khẳng định cuộc đấu tranh của giai cấp vô sản chống giai cấp tư sản là cuộc đấu tranh cuối cùng để đi tới xóa bỏ tận gốc chế độ bóc lột, xây dựng xã hội CNXH.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Phân tích bản chất của Nhà nước theo quan điểm của Chủ nghĩa duy vật lịch sử. Nhà nước có tồn tại vĩnh viễn không?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm và Nguồn gốc:</strong> Nhà nước là một tổ chức chính trị - một bộ máy quyền lực đặc biệt do giai cấp thống trị lập ra. Nguồn gốc sâu xa là do chế độ tư hữu; nguồn gốc trực tiếp là do mâu thuẫn giai cấp gay gắt đến mức không thể điều hòa được.</li>
+                <li><strong>Khẳng định điều gì:</strong> Khẳng định Nhà nước mang bản chất giai cấp sâu sắc. Nó không phải là cơ quan đứng trên giai cấp, dung hòa giai cấp, mà là công cụ bạo lực, công cụ chuyên chính của giai cấp thống trị về kinh tế nhằm thống trị xã hội về mặt chính trị và tư tưởng để bảo vệ lợi ích của họ.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Quan điểm duy tâm tôn giáo cho rằng Nhà nước do Thượng đế sinh ra để bảo vệ mọi người, là vĩnh cửu. Nhưng Triết học Mác chứng minh Nhà nước chỉ là công cụ trấn áp. Ví dụ: Nhà nước tư sản thực chất là bộ máy của thiểu số giới chủ tư bản để bóc lột đa số người lao động. Nhà nước là phạm trù lịch sử, có sinh có diệt. Khi mâu thuẫn giai cấp bị xóa bỏ hoàn toàn trong xã hội Cộng sản chủ nghĩa tương lai, Nhà nước với tư cách là bộ máy bạo lực áp bức sẽ mất đi lý do tồn tại và "tự tiêu vong".</li>
+                <li><strong>Ý nghĩa:</strong> Giúp nhận diện rõ bản chất của các loại hình nhà nước tư sản hiện nay. Khẳng định việc xây dựng Nhà nước pháp quyền XHCN ở Việt Nam mang bản chất của giai cấp công nhân, đại diện cho lợi ích của nhân dân lao động.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Ý thức xã hội có khả năng vượt trước Tồn tại xã hội không? Lấy ví dụ minh họa và nêu ý nghĩa thực tiễn.", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm YTXH và TTXH:</strong> TTXH là đời sống vật chất, YTXH là đời sống tinh thần phản ánh TTXH.</li>
+                <li><strong>Khẳng định điều gì:</strong> Mặc dù TTXH quyết định YTXH, nhưng YTXH có tính năng động, độc lập tương đối. Trong những điều kiện nhất định, tư tưởng khoa học, lý luận tiên tiến do những cá nhân xuất sắc sáng tạo ra hoàn toàn có khả năng vượt trước sự phát triển của TTXH, dự báo được tương lai và định hướng cho thực tiễn.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Sự vượt trước này không phải là ảo tưởng xa rời thực tế, mà nó xuất phát từ việc tư duy con người nhận thức đúng quy luật của TTXH hiện tại. Ví dụ so sánh: Thầy bói phán đoán tương lai vô căn cứ (duy tâm mê tín); ngược lại, C.Mác quan sát CNTB giữa thế kỷ 19, phân tích quy luật giá trị thặng dư và mâu thuẫn kinh tế của nó, từ đó khoa học dự báo sự sụp đổ tất yếu của CNTB và sự ra đời của CNXH. Sự ra đời của Cách mạng tháng Mười Nga đã chứng minh lý luận của Mác đã đi trước thời đại.</li>
+                <li><strong>Ý nghĩa thực tiễn:</strong> Khẳng định tầm quan trọng của việc nghiên cứu khoa học, dự báo chiến lược. Đảng và Nhà nước cần phải có tầm nhìn vượt trước (quy hoạch, đường lối) để chủ động dẫn dắt thực tiễn phát triển, không được chạy theo sau phong trào.</li>
+            </ul>
+        `}, 
+        {
+            "q": "Sản xuất vật chất đóng vai trò gì đối với sự tồn tại và phát triển của xã hội loài người?", 
+            "rubric": `
+            <ul>
+                <li><strong>Khái niệm Sản xuất vật chất:</strong> Là quá trình con người sử dụng công cụ lao động tác động vào giới tự nhiên, cải biến các dạng vật chất của tự nhiên nhằm tạo ra của cải vật chất thỏa mãn nhu cầu sinh tồn và phát triển của con người.</li>
+                <li><strong>Khẳng định điều gì:</strong> Chủ nghĩa duy vật lịch sử khẳng định sản xuất vật chất là cơ sở, nền tảng, là điều kiện tiên quyết mang tính quyết định đối với sự tồn tại và phát triển của toàn bộ xã hội loài người. Không có sản xuất vật chất, xã hội sẽ diệt vong.</li>
+                <li><strong>Phân tích (Ví dụ so sánh):</strong> Quan điểm duy tâm cho rằng tôn giáo, tư tưởng, thần linh là yếu tố quyết định lịch sử. C.Mác đã lật ngược điều đó bằng chân lý giản dị: Trước khi con người có thể làm chính trị, làm nghệ thuật, triết học hay tôn giáo, con người bắt buộc phải ăn uống, mặc, có chỗ ở. Để có những thứ đó, họ phải tiến hành sản xuất vật chất. Sản xuất vật chất tạo ra tư liệu sống, tạo ra các quan hệ xã hội, và sự cải tiến công cụ sản xuất là động lực sâu xa thúc đẩy xã hội tiến lên những hình thái cao hơn.</li>
+                <li><strong>Ý nghĩa thực tiễn:</strong> Là kim chỉ nam cho đường lối đổi mới của Việt Nam: Phát triển kinh tế là nhiệm vụ trọng tâm. Chỉ có đẩy mạnh công nghiệp hóa, hiện đại hóa, làm ra nhiều của cải vật chất thì mới có cơ sở vững chắc để giữ vững độc lập chính trị, nâng cao vị thế ngoại giao và phát triển nền văn hóa - giáo dục của nước nhà.</li>
+            </ul>
+        `}
+    ];
+
+    let currentQ = 0;
+    let userAnswers = new Array(questions.length).fill('');
+    let userScores = new Array(questions.length).fill(null);
+    let isFinished = false;
+
+    function init() {
+        const grid = document.getElementById('nav-grid');
+        questions.forEach((_, index) => {
+            let btn = document.createElement('button');
+            btn.className = 'grid-btn';
+            btn.innerText = index + 1;
+            btn.id = 'nav-' + index;
+            btn.onclick = () => loadQuestion(index);
+            grid.appendChild(btn);
+        });
+        loadQuestion(0);
+    }
+
+    function loadQuestion(index) {
+        if (!isFinished) {
+            userAnswers[currentQ] = document.getElementById('user-input').value;
+        }
+
+        currentQ = index;
+        
+        document.getElementById('q-header').innerText = `Câu ${index + 1} / ${questions.length}`;
+        document.getElementById('q-text').innerText = questions[index].q;
+        
+        let textarea = document.getElementById('user-input');
+        textarea.value = userAnswers[index];
+        
+        let rubricArea = document.getElementById('rubric-area');
+        let btnSubmitAns = document.getElementById('btn-submit-ans');
+        
+        if (isFinished || userScores[index] !== null) {
+            textarea.readOnly = true;
+            btnSubmitAns.style.display = 'none';
+            rubricArea.style.display = 'block';
+            document.getElementById('rubric-content').innerHTML = questions[index].rubric;
+            
+            let scoreSlider = document.getElementById('score-slider');
+            if (userScores[index] !== null) {
+                scoreSlider.value = userScores[index];
+            } else {
+                scoreSlider.value = 5;
+            }
+            updateScoreDisplay();
+            
+            if(isFinished) {
+                document.querySelector('.grading-box').style.display = 'none';
+            }
+            
+        } else {
+            textarea.readOnly = false;
+            btnSubmitAns.style.display = 'block';
+            rubricArea.style.display = 'none';
+        }
+
+        document.getElementById('btn-prev').disabled = (index === 0);
+        document.getElementById('btn-next').disabled = (index === questions.length - 1);
+
+        updateGridUI();
+    }
+
+    function updateGridUI() {
+        document.querySelectorAll('.grid-btn').forEach((btn, i) => {
+            btn.classList.remove('current');
+            if (i === currentQ) btn.classList.add('current');
+            if (userScores[i] !== null) btn.classList.add('completed');
+        });
+    }
+
+    function submitAnswer() {
+        let answer = document.getElementById('user-input').value.trim();
+        if (answer === '') {
+            alert('Bạn chưa nhập câu trả lời!');
+            return;
+        }
+        
+        userAnswers[currentQ] = answer;
+        document.getElementById('user-input').readOnly = true;
+        
+        document.getElementById('btn-submit-ans').style.display = 'none';
+        document.getElementById('rubric-area').style.display = 'block';
+        document.getElementById('rubric-content').innerHTML = questions[currentQ].rubric;
+        
+        document.getElementById('score-slider').value = 5;
+        updateScoreDisplay();
+        
+        document.getElementById('rubric-area').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateScoreDisplay() {
+        document.getElementById('score-val').innerText = parseFloat(document.getElementById('score-slider').value).toFixed(1);
+    }
+
+    function saveScore() {
+        let score = parseFloat(document.getElementById('score-slider').value);
+        userScores[currentQ] = score;
+        
+        alert(`Đã lưu điểm: ${score} / 10 cho Câu ${currentQ + 1}`);
+        
+        if (currentQ < questions.length - 1) {
+            loadQuestion(currentQ + 1);
+        } else {
+            updateGridUI();
+        }
+    }
+
+    function finishTest() {
+        if (!isFinished) {
+            userAnswers[currentQ] = document.getElementById('user-input').value;
+        }
+        
+        let uncompleted = userScores.findIndex(s => s === null);
+        if (uncompleted !== -1) {
+            if (!confirm(`Bạn chưa tự chấm điểm câu ${uncompleted + 1}. Bạn có chắc chắn muốn kết thúc? Những câu chưa chấm sẽ tính 0 điểm.`)) {
+                loadQuestion(uncompleted);
+                return;
+            }
+        }
+        
+        isFinished = true;
+        
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        let totalScore = 0;
+        let reviewHTML = '';
+        
+        questions.forEach((q, i) => {
+            let score = userScores[i] || 0;
+            totalScore += score;
+            
+            reviewHTML += `
+                <div class="review-item">
+                    <h4>Câu ${i + 1}: ${q.q}</h4>
+                    <p><strong>Bài làm của bạn:</strong></p>
+                    <div class="review-user-ans">${userAnswers[i] || '<span style="color:red">Không có câu trả lời.</span>'}</div>
+                    <div class="review-score">Điểm tự đánh giá: ${score.toFixed(1)} / 10</div>
+                    <div style="margin-top: 15px; font-size:0.95rem; background:#fcf3cf; padding: 15px; border-radius:5px; border-left: 4px solid var(--warning);">
+                        <strong>Bareme tham khảo:</strong> ${q.rubric}
+                    </div>
+                </div>
+            `;
+        });
+        
+        let maxScore = questions.length * 10;
+        document.getElementById('final-score').innerText = `${totalScore.toFixed(1)} / ${maxScore}`;
+        document.getElementById('review-list').innerHTML = reviewHTML;
+        
+        let evalText = document.getElementById('final-eval');
+        let percent = totalScore / maxScore;
+        if (percent >= 0.85) {
+            evalText.innerText = "Xuất sắc! Lập luận của bạn rất logic, đáp ứng đúng cấu trúc khái niệm - khẳng định - ví dụ.";
+            evalText.style.color = "var(--success)";
+        } else if (percent >= 0.65) {
+            evalText.innerText = "Khá tốt! Bạn hiểu bài nhưng cần phân tích sâu sắc hơn và lấy ví dụ so sánh rõ ràng hơn ở một số luận điểm.";
+            evalText.style.color = "var(--secondary)";
+        } else if (percent >= 0.50) {
+            evalText.innerText = "Đạt yêu cầu. Hãy bám sát cấu trúc trả lời: Khái niệm -> Khẳng định điều gì -> Ví dụ so sánh.";
+            evalText.style.color = "var(--warning)";
+        } else {
+            evalText.innerText = "Cần cố gắng nhiều hơn! Hãy đọc lại giáo trình để nắm vững bản chất triết học.";
+            evalText.style.color = "var(--danger)";
+        }
+    }
+
+    function changeQuestion(dir) {
+        let nextIdx = currentQ + dir;
+        if (nextIdx >= 0 && nextIdx < questions.length) {
+            loadQuestion(nextIdx);
+        }
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
