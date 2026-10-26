@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn thi Tự luận Môi trường (Cập nhật V2)</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; scroll-behavior: smooth; }</style>
+</head>
+<body>
+  <a href="index.html" style="position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:9999;padding:12px 20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-decoration:none;font:600 15px system-ui,sans-serif;border-radius:999px;box-shadow:0 4px 14px rgba(99,102,241,.5);">← Về bài Triết</a>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const essayData = [
+          {
+            id: 1,
+            title: "Chương 1 - Phát triển bền vững",
+            question: "Định nghĩa Phát triển bền vững theo Ủy ban Brundtland (1987) là gì? Phân tích sự tương tác giữa 3 trụ cột (Kinh tế, Xã hội, Môi trường) để tạo nên sự phát triển bền vững.",
+            standardAnswer: `• Định nghĩa: Phát triển bền vững là sự phát triển đáp ứng được các nhu cầu của thế hệ hiện tại mà không làm tổn hại đến khả năng đáp ứng nhu cầu của các thế hệ tương lai.
+• Phân tích sự tương tác 3 trụ cột: Không tồn tại độc lập mà giao thoa chặt chẽ với nhau:
+- Kinh tế x Xã hội = Công bằng (Equitable): Tăng trưởng phải đi đôi với phân phối lợi ích, xóa đói giảm nghèo, tạo việc làm, không làm sâu sắc bất bình đẳng.
+- Kinh tế x Môi trường = Khả thi (Viable): Hoạt động kinh tế phải nằm trong giới hạn chịu tải sinh thái, nội hóa chi phí môi trường (Thuế carbon, thị trường carbon).
+- Xã hội x Môi trường = Bền chịu (Bearable): Xã hội lành mạnh đòi hỏi môi trường lành mạnh, mọi người đều có quyền tiếp cận nước sạch, khí sạch.
+-> Bền vững (Sustainable) chỉ đạt được khi cả 3 chiều được thỏa mãn đồng thời.`,
+            rubric: [
+              { criterion: "Nêu đúng định nghĩa Brundtland (1987)", points: 2.5 },
+              { criterion: "Nêu được 3 trụ cột: Kinh tế, Xã hội, Môi trường", points: 1.5 },
+              { criterion: "Phân tích Kinh tế x Xã hội = Công bằng (Kèm ví dụ)", points: 2.0 },
+              { criterion: "Phân tích Kinh tế x Môi trường = Khả thi (Kèm ví dụ)", points: 2.0 },
+              { criterion: "Phân tích Xã hội x Môi trường = Bền chịu và tổng hợp Bền vững", points: 2.0 }
+            ]
+          },
+          {
+            id: 2,
+            title: "Chương 1 - Tài nguyên & Vốn tự nhiên",
+            question: "Phân biệt Tài nguyên thiên nhiên tái tạo và không tái tạo (cho ví dụ). Tại sao Vốn tự nhiên (Natural Capital) được coi là nền tảng của PTBV? Kể tên 4 nhóm dịch vụ hệ sinh thái.",
+            standardAnswer: `• Phân biệt:
+- TN tái tạo: Tự phục hồi, có thể tồn tại vĩnh viễn nếu tốc độ khai thác ≤ tốc độ phục hồi tự nhiên. VD: Rừng, thủy sản, năng lượng mặt trời.
+- TN không tái tạo: Trữ lượng giới hạn, mất hàng triệu năm hình thành, khai thác là cạn kiệt. VD: Than đá, dầu mỏ, khoáng sản (vàng, sắt).
+• Vai trò của Vốn tự nhiên: Là toàn bộ kho lưu trữ nguồn lực thiên nhiên duy trì dòng chảy dịch vụ hệ sinh thái phục vụ con người. Nó là 'vốn gốc', nếu tiêu lẹm vốn gốc này, hệ sinh thái sẽ sụp đổ, kéo theo kinh tế sụp đổ.
+• 4 nhóm dịch vụ hệ sinh thái:
+1. Dịch vụ Cung ứng: Lương thực, nước, gỗ.
+2. Dịch vụ Điều tiết: Điều hòa khí hậu, lọc nước, kiểm soát lũ.
+3. Dịch vụ Văn hóa: Du lịch sinh thái, tâm linh.
+4. Dịch vụ Hỗ trợ: Chu trình dinh dưỡng, quang hợp, hình thành đất.`,
+            rubric: [
+              { criterion: "Định nghĩa và ví dụ Tài nguyên tái tạo", points: 2.0 },
+              { criterion: "Định nghĩa và ví dụ Tài nguyên không tái tạo", points: 2.0 },
+              { criterion: "Giải thích vai trò nền tảng của Vốn tự nhiên", points: 2.0 },
+              { criterion: "Nêu đủ 4 dịch vụ: Cung ứng, Điều tiết, Văn hóa, Hỗ trợ", points: 4.0 }
+            ]
+          },
+          {
+            id: 3,
+            title: "Chương 2 - Môi trường Không khí",
+            question: "Trình bày cơ chế hình thành và tác động của hiện tượng Khói quang hóa (Photochemical Smog) và Mưa axit (Acid Rain).",
+            standardAnswer: `• Khói quang hóa (Photochemical Smog):
+- Cơ chế: Sự kết hợp giữa Khí thải giao thông (NOx) + Hơi xăng/dung môi (VOCs) phản ứng với nhau dưới bức xạ tia cực tím (UV) vào buổi trưa nắng gắt.
+- Hệ quả: Sinh ra chất ô nhiễm thứ cấp cực độc là Ozone mặt đất (O3), gây mù quang hóa, cay mắt, rát cổ họng, viêm phổi (Điển hình tại Los Angeles hay Hà Nội mùa nắng).
+• Mưa axit (Acid Rain):
+- Cơ chế: Lưu huỳnh đioxit (SO2 từ đốt than/nhiệt điện) và Oxit nitơ (NOx) phản ứng với hơi nước trong không khí sinh ra Axit Sunfuric (H2SO4) và Axit Nitric (HNO3).
+- Hệ quả: Làm nước mưa có độ pH < 5.6. Mưa axit ăn mòn công trình đá vôi (như Taj Mahal, Lăng Bác), phá hủy bề mặt lá cây làm chết rừng diện rộng, axit hóa hồ nước làm cá tôm chết nghẹt.`,
+            rubric: [
+              { criterion: "Cơ chế Khói quang hóa (NOx + VOCs + UV -> Ozone mặt đất)", points: 2.5 },
+              { criterion: "Tác động của Khói quang hóa (Kích ứng hô hấp, mắt, giảm tầm nhìn)", points: 2.5 },
+              { criterion: "Cơ chế Mưa axit (SO2 + NOx + H2O -> H2SO4, HNO3, pH<5.6)", points: 2.5 },
+              { criterion: "Tác động của Mưa axit (Ăn mòn công trình, chết rừng, axit hóa hồ)", points: 2.5 }
+            ]
+          },
+          {
+            id: 4,
+            title: "Chương 2 - Môi trường Đất",
+            question: "Phân tích 3 loại hình suy thoái đất cần phòng ngừa (Xói mòn, Thoái hóa, Sa mạc hóa) và đề xuất 1 giải pháp cụ thể cho mỗi loại.",
+            standardAnswer: `1. Xói mòn (Erosion):
+- Đặc điểm: Lớp đất mặt giàu mùn bị cuốn trôi do nước mưa hoặc gió mạnh (đặc biệt nguy hiểm ở đất dốc vùng núi).
+- Giải pháp: Trồng rừng phòng hộ phủ xanh; canh tác ruộng bậc thang; làm đường đồng mức; che phủ vật liệu hữu cơ (mulching).
+2. Thoái hóa (Degradation):
+- Đặc điểm: Đất bạc màu, chai cứng, mất dinh dưỡng do canh tác thâm canh liên tục (lúa 3 vụ), lạm dụng phân bón hóa học và thuốc BVTV.
+- Giải pháp: Nông nghiệp bảo tồn (Luân canh, làm đất tối thiểu - Zero tillage); bón phân xanh, ủ phân compost.
+3. Sa mạc hóa (Desertification):
+- Đặc điểm: Đất khô cằn hoàn toàn mất khả năng canh tác do phá rừng, biến đổi khí hậu (Ninh Thuận, Bình Thuận).
+- Giải pháp: Xây dựng hàng rào sinh học chắn cát di động (trồng keo, phi lao); trồng cây họ đậu để cố định đạm cải tạo đất.`,
+            rubric: [
+              { criterion: "Đặc điểm và giải pháp cho Xói mòn đất", points: 3.0 },
+              { criterion: "Đặc điểm và giải pháp cho Thoái hóa đất", points: 3.5 },
+              { criterion: "Đặc điểm và giải pháp cho Sa mạc hóa", points: 3.5 }
+            ]
+          },
+          {
+            id: 5,
+            title: "Chương 2 - Môi trường Nước",
+            question: "Trình bày quá trình Phú dưỡng hóa (Eutrophication) trong môi trường nước và hệ lụy của nó đối với hệ sinh thái thủy sinh.",
+            standardAnswer: `• Nguyên nhân: Dư thừa trầm trọng chất dinh dưỡng (đặc biệt là Nitơ và Photpho) từ phân bón nông nghiệp rửa trôi hoặc nước thải sinh hoạt xả thẳng vào ao hồ.
+• Quá trình diễn ra 5 bước:
+(1) N, P dư thừa đi vào nguồn nước tạo môi trường siêu dinh dưỡng.
+(2) Tảo bùng phát (Algal bloom): Tảo và bèo tây phát triển dày đặc che kín mặt nước, ngăn ánh sáng xuyên xuống đáy.
+(3) Tảo chết: Do sống quá dày, tảo ở dưới tầng sâu chết, vi sinh vật tiến hành phân hủy xác tảo.
+(4) Hút cạn DO: Vi sinh vật hô hấp hút cạn lượng Oxy hòa tan (DO) trong nước khiến DO tụt xuống dưới 2mg/L, tạo ra các "Vùng chết" (Dead Zone).
+(5) Hệ lụy: Cá tôm và các sinh vật khác chết ngạt hàng loạt, hệ sinh thái thủy sinh sụp đổ hoàn toàn, nước đen bốc mùi hôi thối.`,
+            rubric: [
+              { criterion: "Nguyên nhân chính xác: Dư thừa N, P từ nước thải/nông nghiệp", points: 2.0 },
+              { criterion: "Bước 1+2: Tảo bùng phát, che khuất ánh sáng mặt trời", points: 2.0 },
+              { criterion: "Bước 3: Quá trình tảo chết và vi khuẩn phân hủy", points: 2.0 },
+              { criterion: "Bước 4: Sụt giảm Oxy hòa tan (DO), hình thành Vùng chết", points: 2.0 },
+              { criterion: "Hệ lụy cuối: Hệ sinh thái sụp đổ, sinh vật thủy sinh chết ngạt", points: 2.0 }
+            ]
+          },
+          {
+            id: 6,
+            title: "Chương 3 - Quản lý Chất thải rắn",
+            question: "Trình bày thứ bậc ưu tiên xử lý chất thải rắn theo Mô hình 5R. Giải thích khái niệm Trách nhiệm mở rộng của nhà sản xuất (EPR) trong Kinh tế tuần hoàn.",
+            standardAnswer: `• Mô hình 5R (Theo thứ tự ưu tiên từ cao xuống thấp):
+1. Refuse (Từ chối): Không mua/sử dụng sản phẩm gây rác nếu không cần thiết.
+2. Reduce (Giảm thiểu): Cố gắng giảm lượng rác phát sinh từ nguồn đầu vào.
+3. Reuse (Tái sử dụng): Dùng lại vật dụng nhiều lần (như túi vải, bình nước thủy tinh).
+4. Recycle (Tái chế): Biến rác thành nguyên liệu mới (nhựa tái sinh, giấy tái chế).
+5. Recover (Thu hồi năng lượng): Biện pháp cuối cùng trước khi chôn lấp, đó là Đốt rác thu điện (WtE).
+• Khái niệm EPR (Trách nhiệm mở rộng của nhà sản xuất):
+Là cơ chế pháp lý quy định nhà sản xuất/nhập khẩu phải chịu trách nhiệm tài chính và vật lý để thu hồi, tái chế sản phẩm hoặc bao bì do họ bán ra sau khi người dùng vứt bỏ. Điều này ép các hãng (như Vinamilk, Coca-Cola) phải thiết kế bao bì dễ tái chế hơn, là cốt lõi để hiện thực hóa Kinh tế tuần hoàn thay vì chỉ vứt rác thẳng ra bãi chôn lấp.`,
+            rubric: [
+              { criterion: "Nêu đúng và phân tích Refuse, Reduce", points: 2.0 },
+              { criterion: "Nêu đúng và phân tích Reuse, Recycle", points: 2.0 },
+              { criterion: "Nêu đúng và phân tích Recover (Đốt phát điện WtE)", points: 2.0 },
+              { criterion: "Định nghĩa chuẩn khái niệm EPR (Trách nhiệm mở rộng SX)", points: 2.0 },
+              { criterion: "Liên kết EPR với mô hình Kinh tế tuần hoàn / Thay đổi thiết kế", points: 2.0 }
+            ]
+          },
+          {
+            id: 7,
+            title: "Chương 3 - Không khí & Đô thị",
+            question: "Nêu các nguồn phát thải PM2.5 chính tại Hà Nội (theo %). Đề xuất 3 nhóm giải pháp cốt lõi để giảm thiểu ô nhiễm không khí tại các đô thị lớn ở Việt Nam.",
+            standardAnswer: `• Các nguồn phát thải PM2.5 tại Hà Nội (Số liệu 2024):
+- Công nghiệp & Nhiệt điện than (Lan truyền từ ngoại thành/tỉnh lân cận): 29% (Lớn nhất).
+- Xây dựng công trình & Bụi đường: 17%
+- Sinh hoạt dân sinh (Đun bếp than, đốt rác): 17%
+- Giao thông vận tải: 13%. (Ngoài ra vào vụ mùa, đốt rơm rạ là tác nhân gây bụi tăng vọt cấp tính).
+• 3 Nhóm giải pháp cốt lõi:
+1. Giao thông xanh: Đẩy nhanh điện hóa xe buýt/taxi (Mục tiêu 100% vào 2030), phát triển Metro/đường sắt, nghiên cứu lập Vùng phát thải thấp (LEZ) cấm xe máy cũ.
+2. Kiểm soát công nghiệp: Bắt buộc 100% nhà máy lớn (xi măng, luyện kim) lắp hệ thống quan trắc CEMS 24/7; loại bỏ dần nhiệt điện than, ứng dụng công nghệ lọc khí Scrubber/ESP.
+3. Kiểm soát sinh hoạt & Nông nghiệp: Cấm hoàn toàn bếp than tổ ong nội đô, có chế tài phạt nặng việc đốt rơm rạ/đốt rác lộ thiên; rửa bánh xe và che chắn bắt buộc công trình thi công.`,
+            rubric: [
+              { criterion: "Nêu đúng % các nguồn: Công nghiệp 29, XD 17, SH 17, GT 13", points: 4.0 },
+              { criterion: "Giải pháp 1: Điện hóa giao thông công cộng, Vùng LEZ", points: 2.0 },
+              { criterion: "Giải pháp 2: Quan trắc tự động CEMS, dừng điện than", points: 2.0 },
+              { criterion: "Giải pháp 3: Quản lý đốt rác, đốt rơm rạ, che chắn công trình", points: 2.0 }
+            ]
+          },
+          {
+            id: 8,
+            title: "Chương 3 - Tiết kiệm Năng lượng",
+            question: "Phân biệt Tiết kiệm năng lượng (Energy Conservation) và Hiệu quả năng lượng (Energy Efficiency), cho ví dụ. Khái niệm 'Negawatt' mang ý nghĩa gì?",
+            standardAnswer: `• Phân biệt:
+- Tiết kiệm NL (Conservation): Là việc cắt giảm năng lượng thông qua THAY ĐỔI HÀNH VI và thói quen. Bạn phải hy sinh một phần tiện ích. (VD: Tắt điện khi ra khỏi phòng, chọn đi xe đạp thay vì đi ô tô, mặc áo ấm thay vì bật sưởi).
+- Hiệu quả NL (Efficiency): Là duy trì hoặc tăng cường tiện ích hiện tại nhưng sử dụng ít năng lượng đầu vào hơn thông qua ĐỔI MỚI CÔNG NGHỆ. (VD: Cùng độ sáng 1000 lumen, thay bóng sợi đốt tốn 60W bằng bóng LED chỉ tốn 9W; dùng điều hòa Inverter biến tần VFD).
+• Khái niệm 'Negawatt':
+Do IEA (Cơ quan năng lượng quốc tế) định nghĩa: Đây là năng lượng Ảo. 1 Negawatt điện tiết kiệm được tương đương với 1 Megawatt điện phải xây nhà máy sản xuất ra. Negawatt là năng lượng rẻ nhất, sạch nhất vì việc tiết kiệm sẽ không tốn than, không xả CO2 và không tốn tiền xây nhà máy.`,
+            rubric: [
+              { criterion: "Định nghĩa Tiết kiệm NL (đổi hành vi) và Ví dụ", points: 3.5 },
+              { criterion: "Định nghĩa Hiệu quả NL (công nghệ) và Ví dụ", points: 3.5 },
+              { criterion: "Giải thích khái niệm Negawatt và ý nghĩa bền vững", points: 3.0 }
+            ]
+          },
+          {
+            id: 9,
+            title: "Chương 3 - Quản lý Nguồn nước",
+            question: "Khung tiếp cận 3 cấp trong kiểm soát ô nhiễm nguồn nước là gì? Kể tên 2 công nghệ xử lý nước thải tiên tiến và 1 bài học phục hồi sông ô nhiễm thành công.",
+            standardAnswer: `• Khung tiếp cận 3 cấp (Ưu tiên từ cao xuống thấp):
+1. Cấp Phòng ngừa: Ngăn ô nhiễm từ trong trứng nước (Chi phí thấp nhất). VD: Lập Đánh giá tác động MT (ĐTM) khắt khe; phân vùng xả thải; giữ hành lang bảo vệ sông.
+2. Cấp Giảm thiểu: Xử lý tại nguồn thải. VD: Yêu cầu 100% KCN, Đô thị phải xây trạm XLNT tập trung đạt QCVN trước khi xả ra sông.
+3. Cấp Phục hồi: Xử lý hậu quả dòng sông đã chết (Tốn kém và lâu nhất). VD: Nạo vét bùn đáy, bổ cập nước sạch, dùng vi sinh xử lý (sông Tô Lịch).
+• 2 Công nghệ XLNT tiên tiến:
+- MBR (Màng sinh học): Kết hợp vi khuẩn ăn chất hữu cơ + Màng siêu lọc chắn mọi cặn bẩn, vi khuẩn.
+- Nano-Bioreactor: Sục bọt khí nano cung cấp oxy kích hoạt vi sinh vật bản địa phân hủy bùn đáy.
+• Bài học phục hồi sông:
+Sông Thames (Anh): Phục hồi từ dòng sông hôi thối bằng quyết tâm chính trị xây dựng toàn bộ hệ thống cống ngầm tách biệt nước thải ròng rã suốt 50 năm. Hoặc Cheonggyecheon (Hàn Quốc): Phá bỏ bê tông cao tốc, khơi thông dòng chảy làm công viên.`,
+            rubric: [
+              { criterion: "Phân tích cấp Phòng ngừa (Quan trọng nhất)", points: 1.5 },
+              { criterion: "Phân tích cấp Giảm thiểu (Xử lý tại nguồn)", points: 1.5 },
+              { criterion: "Phân tích cấp Phục hồi (Xử lý hậu quả)", points: 1.5 },
+              { criterion: "Nêu và giải thích 2 công nghệ XLNT (VD: MBR, Nano)", points: 3.0 },
+              { criterion: "Ví dụ Thames hoặc Cheonggyecheon", points: 2.5 }
+            ]
+          },
+          {
+            id: 10,
+            title: "Chương 1 - Luật & Nguyên tắc PTBV",
+            question: "Nêu và giải thích 'Nguyên tắc phòng ngừa' và 'Nguyên tắc Người gây ô nhiễm phải trả tiền (PPP)' trong Phát triển bền vững.",
+            standardAnswer: `• Nguyên tắc Phòng ngừa (Precautionary Principle):
+Quy định: Khi có các nguy cơ gây tổn hại nghiêm trọng hoặc không thể đảo ngược cho môi trường, thì sự "thiếu chắc chắn về mặt khoa học" (chưa có bằng chứng 100%) KHÔNG ĐƯỢC dùng làm lý do để trì hoãn các biện pháp ngăn chặn.
+Ý nghĩa: Ưu tiên sự an toàn tuyệt đối. Ví dụ: Nếu nghi ngờ hóa chất A gây ung thư, ta phải cấm dùng nó ngay lập tức, chứ không được chờ 20 năm nghiên cứu xem nó có thực sự gây bệnh không mới cấm.
+• Nguyên tắc PPP (Polluter Pays Principle):
+Quy định: Mọi chi phí khắc phục ô nhiễm và suy thoái môi trường phải được "nội hóa" vào giá thành sản phẩm/dịch vụ. Tổ chức/Cá nhân nào gây ô nhiễm phải trả tiền dọn dẹp hậu quả đó.
+Ý nghĩa: Ngăn chặn doanh nghiệp tư nhân hóa lợi nhuận mà đẩy rủi ro môi trường cho toàn xã hội gánh. Ứng dụng thực tế: Thuế Môi trường vào xăng dầu, phạt vi phạm, mua bán Tín chỉ Carbon.`,
+            rubric: [
+              { criterion: "Định nghĩa Nguyên tắc phòng ngừa (Thiếu chứng cứ ko được trì hoãn)", points: 2.5 },
+              { criterion: "Giải thích ý nghĩa Nguyên tắc phòng ngừa (Lấy ví dụ)", points: 2.5 },
+              { criterion: "Định nghĩa PPP (Nội hóa chi phí ô nhiễm)", points: 2.5 },
+              { criterion: "Giải thích ý nghĩa và ứng dụng PPP (Thuế carbon, phạt)", points: 2.5 }
+            ]
+          }
+        ];
+
+        function App() {
+          const [currentIndex, setCurrentIndex] = useState(0);
+          const [userAnswers, setUserAnswers] = useState({});
+          const [userScores, setUserScores] = useState({});
+          const [showAnswer, setShowAnswer] = useState({});
+          const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+          const mainRef = useRef(null);
+
+          const currentQ = essayData[currentIndex];
+
+          // Cuộn lên đầu khi chuyển câu
+          useEffect(() => {
+            if (mainRef.current) mainRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+          }, [currentIndex]);
+
+          const handleTextChange = (e) => setUserAnswers({ ...userAnswers, [currentQ.id]: e.target.value });
+          
+          const handleSubmit = () => setShowAnswer({ ...showAnswer, [currentQ.id]: true });
+
+          const handleScoreChange = (e) => {
+            const val = parseFloat(e.target.value);
+            if (val >= 0 && val <= 10) setUserScores({ ...userScores, [currentQ.id]: val });
+            else if (e.target.value === "") {
+              const newScores = { ...userScores };
+              delete newScores[currentQ.id];
+              setUserScores(newScores);
+            }
+          };
+
+          const getCompletedCount = () => Object.keys(showAnswer).length;
+          
+          const getAverageScore = () => {
+            const scores = Object.values(userScores);
+            if (scores.length === 0) return 0;
+            const sum = scores.reduce((a, b) => a + b, 0);
+            return (sum / scores.length).toFixed(1);
+          };
+
+          return (
+            <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col md:flex-row font-sans selection:bg-emerald-200">
+              
+              {/* Header Mobile */}
+              <div className="md:hidden bg-emerald-800 text-white p-4 flex justify-between items-center shadow-md sticky top-0 z-20">
+                <div className="flex items-center gap-2 font-bold text-lg truncate">
+                  <i className="fa-solid fa-pen-to-square text-2xl shrink-0"></i>
+                  <span className="truncate">Tự luận - V2</span>
+                </div>
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 bg-emerald-700 rounded-lg">
+                  <i className="fa-solid fa-list text-xl"></i>
+                </button>
+              </div>
+
+              {/* Sidebar */}
+              <aside className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 fixed md:sticky top-0 left-0 h-full w-80 bg-white shadow-2xl md:shadow-none md:border-r border-slate-200 z-30 flex flex-col`}>
+                <div className="hidden md:flex p-6 bg-emerald-800 text-white items-center gap-4 shrink-0">
+                  <i className="fa-solid fa-graduation-cap text-3xl"></i>
+                  <h1 className="font-bold text-xl leading-tight">Tự luận MT<br/>& PT Bền vững</h1>
+                </div>
+
+                <div className="p-5 border-b border-slate-100 bg-slate-50 shrink-0">
+                  <p className="text-sm font-bold text-slate-500 uppercase mb-2">Tiến độ làm bài</p>
+                  <div className="w-full bg-slate-200 rounded-full h-2.5 mb-3 overflow-hidden">
+                    <div className="bg-emerald-500 h-2.5 rounded-full transition-all" style={{ width: `${(getCompletedCount() / essayData.length) * 100}%` }}></div>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-semibold text-slate-700">Đã xem/nộp: {getCompletedCount()}/{essayData.length}</span>
+                    <span className="font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded">Điểm TB: {getAverageScore()}</span>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  {essayData.map((q, idx) => {
+                    const isSubmitted = showAnswer[q.id];
+                    const hasScore = userScores[q.id] !== undefined;
+                    const isCurrent = currentIndex === idx;
+
+                    let btnClass = "w-full text-left p-3 rounded-xl border-2 transition-all flex items-center justify-between outline-none ";
+                    if (isCurrent) btnClass += "bg-emerald-50 border-emerald-500 text-emerald-800 shadow-sm";
+                    else if (isSubmitted) btnClass += "bg-white border-slate-200 text-slate-600 hover:border-emerald-300";
+                    else btnClass += "bg-slate-50 border-transparent text-slate-500 hover:bg-slate-100";
+
+                    return (
+                      <button key={q.id} onClick={() => { setCurrentIndex(idx); setIsSidebarOpen(false); }} className={btnClass}>
+                        <div className="flex items-center gap-3 truncate pr-2">
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${isCurrent ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                            {idx + 1}
+                          </div>
+                          <span className="truncate text-sm font-semibold">{q.title}</span>
+                        </div>
+                        {isSubmitted && hasScore && <span className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded">{userScores[q.id]}đ</span>}
+                        {isSubmitted && !hasScore && <i className="fa-solid fa-circle-check text-amber-500 text-lg"></i>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </aside>
+
+              {/* Main Content */}
+              <main ref={mainRef} className="flex-1 flex flex-col p-4 md:p-8 lg:p-12 overflow-y-auto bg-slate-100/50 relative scroll-smooth">
+                <div className="w-full max-w-4xl mx-auto space-y-6 pb-20">
+                  
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <span className="inline-block px-5 py-2 bg-emerald-100 text-emerald-800 text-sm font-bold rounded-full uppercase tracking-wider shadow-sm border border-emerald-200 max-w-max">
+                      Câu hỏi {currentIndex + 1}
+                    </span>
+                    <span className="text-emerald-700 font-bold bg-white px-4 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                      <i className="fa-solid fa-tag"></i> {currentQ.title}
+                    </span>
+                  </div>
+
+                  {/* Hộp Câu hỏi */}
+                  <div className="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-slate-200">
+                    <h2 className="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed">
+                      {currentQ.question}
+                    </h2>
+                  </div>
+
+                  {/* Hộp Làm bài */}
+                  <div className="bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-slate-200 space-y-5">
+                    <div className="flex items-center gap-3 text-slate-700 font-bold text-lg">
+                      <i className="fa-solid fa-pen-to-square text-emerald-600 text-xl"></i>
+                      <h3>Phần làm bài (Có thể gõ nháp)</h3>
+                    </div>
+                    
+                    <textarea 
+                      value={userAnswers[currentQ.id] || ""}
+                      onChange={handleTextChange}
+                      placeholder="Gõ nháp ý chính hoặc câu trả lời đầy đủ của bạn vào đây..."
+                      className="w-full h-48 md:h-64 p-5 bg-slate-50 border border-slate-300 rounded-2xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none resize-y text-lg leading-relaxed text-slate-700 shadow-inner transition-all"
+                      disabled={showAnswer[currentQ.id]}
+                    />
+                    
+                    {!showAnswer[currentQ.id] ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button 
+                          onClick={handleSubmit}
+                          disabled={!(userAnswers[currentQ.id] && userAnswers[currentQ.id].trim().length > 10)}
+                          className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold rounded-2xl shadow-md transition-all flex items-center justify-center gap-3 text-lg"
+                        >
+                          <i className="fa-solid fa-check-double"></i> Nộp bài tự chấm
+                        </button>
+                        
+                        <button 
+                          onClick={handleSubmit}
+                          className="w-full py-4 bg-white border-2 border-emerald-500 text-emerald-700 hover:bg-emerald-50 font-bold rounded-2xl shadow-sm transition-all flex items-center justify-center gap-3 text-lg"
+                        >
+                          <i className="fa-solid fa-eye"></i> Xem Đáp án ngay
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="p-5 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-4 text-amber-800 font-medium">
+                        <i className="fa-solid fa-circle-info text-2xl mt-0.5"></i>
+                        <p className="text-lg">Đã mở Đáp án. Hãy kéo xuống bên dưới để học thuộc kiến thức, xem barem chi tiết và tự đánh giá điểm số của bạn.</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Vùng Đáp án & Barem hiển thị sau khi nộp/xem */}
+                  {showAnswer[currentQ.id] && (
+                    <div className="bg-white rounded-3xl shadow-xl border-2 border-emerald-500 overflow-hidden mt-8 transition-all">
+                      
+                      <div className="p-6 md:p-10 bg-emerald-50 border-b border-emerald-200 space-y-4">
+                        <div className="flex items-center gap-3 text-emerald-800 font-extrabold uppercase tracking-widest text-sm">
+                          <i className="fa-solid fa-file-lines text-xl"></i> Đáp án chuẩn chi tiết
+                        </div>
+                        <div className="text-lg md:text-xl text-emerald-900 leading-relaxed font-medium whitespace-pre-wrap">
+                          {currentQ.standardAnswer}
+                        </div>
+                      </div>
+
+                      <div className="p-6 md:p-10 space-y-6">
+                        <div className="flex items-center gap-3 text-slate-800 font-extrabold uppercase tracking-widest text-sm mb-4">
+                          <i className="fa-solid fa-list-check text-xl"></i> Barem chấm điểm (10 Điểm)
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {currentQ.rubric.map((item, idx) => (
+                            <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-2xl shadow-sm gap-3">
+                              <span className="text-slate-700 text-lg leading-snug">{item.criterion}</span>
+                              <span className="font-black text-emerald-700 shrink-0 bg-emerald-100 px-4 py-2 rounded-xl text-lg border border-emerald-200 self-start sm:self-auto">
+                                {item.points.toFixed(1)} đ
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Tự chấm điểm */}
+                        <div className="mt-10 pt-8 border-t-2 border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6">
+                          <div className="flex items-center gap-4 text-slate-700">
+                            <i className="fa-solid fa-medal text-4xl text-amber-500 bg-amber-50 p-3 rounded-full"></i>
+                            <div>
+                              <h4 className="font-extrabold text-xl text-slate-800">Tự đánh giá điểm</h4>
+                              <p className="text-slate-500 font-medium">Bạn đạt bao nhiêu điểm câu này?</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                            <input 
+                              type="number" 
+                              min="0" max="10" step="0.5"
+                              value={userScores[currentQ.id] || ""}
+                              onChange={handleScoreChange}
+                              className="w-28 h-14 text-center text-2xl font-black bg-white border-2 border-slate-300 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 outline-none text-emerald-700 transition-all shadow-inner"
+                            />
+                            <span className="text-2xl font-bold text-slate-400 pr-3">/ 10</span>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Điều hướng */}
+                  <div className="pt-8 flex justify-between px-2">
+                    <button
+                      onClick={() => setCurrentIndex(currentIndex>0?currentIndex-1:0)}
+                      disabled={currentIndex === 0}
+                      className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-bold transition-all ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed bg-slate-200 text-slate-500' : 'bg-white text-slate-700 shadow-md hover:shadow-lg border border-slate-200 hover:-translate-y-1'}`}
+                    >
+                      <i className="fa-solid fa-chevron-left text-xl"></i> <span className="hidden sm:inline">Câu trước</span>
+                    </button>
+                    <button
+                      onClick={() => setCurrentIndex(currentIndex<essayData.length-1?currentIndex+1:currentIndex)}
+                      disabled={currentIndex === essayData.length - 1}
+                      className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold transition-all shadow-lg ${currentIndex === essayData.length - 1 ? 'opacity-50 cursor-not-allowed bg-slate-200 text-slate-500 shadow-none' : 'bg-emerald-600 text-white hover:bg-emerald-500 hover:-translate-y-1'}`}
+                    >
+                      <span className="hidden sm:inline">Câu tiếp</span> <i className="fa-solid fa-chevron-right text-xl"></i>
+                    </button>
+                  </div>
+
+                </div>
+              </main>
+
+              {isSidebarOpen && <div className="fixed inset-0 bg-slate-900/50 z-20 md:hidden backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />}
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
